@@ -4,11 +4,41 @@ const addIsDoneTaskButton = document.getElementById("Add-Is-Done-Task");
 
 // Predefined tasks on page load
 document.addEventListener("DOMContentLoaded", () => {
-  addTask("Learn Advanced JS", toDoKanbanBoard);
-  addTask("Learn ML In Python", toDoKanbanBoard);
-  addTask("Mastering Web Dev.", inProgressKanbanBoard);
-  addTask("Mastering Python", inProgressKanbanBoard);
-  addTask("Completed DSA In Java", isDoneKanbanBoard);
+  console.log("Local Storage at Load:", Object.entries(localStorage));
+
+  if (localStorage.length === 0) {
+    // alert("You Don't Have Something");
+
+    // Storing Board Names as Strings
+    localStorage.setItem("Learn Advanced JS", "to-do");
+    localStorage.setItem("Learn ML In Python", "to-do");
+    localStorage.setItem("Mastering Web Dev.", "in-progress");
+    localStorage.setItem("Mastering Python", "in-progress");
+    localStorage.setItem("Completed DSA In Java", "is-done");
+
+    console.log("Newly Added Local Storage:", Object.entries(localStorage));
+
+    setTimeout(() => {
+      location.reload();
+    }, 100);
+  } else {
+    // alert("You Have Something");
+
+    // **Mapping Strings to Actual DOM Elements**
+    const boardMap = {
+      "to-do": document.getElementById("to-do"),
+      "in-progress": document.getElementById("in-progress"),
+      "is-done": document.getElementById("is-done"),
+    };
+
+    Object.keys(localStorage).forEach((taskName) => {
+      let boardName = localStorage.getItem(taskName);
+      let boardElement = boardMap[boardName]; // Get Actual Element
+
+      addTask(taskName, boardElement);
+    });
+  }
+
   setNumberOfTasks();
 });
 
@@ -41,10 +71,10 @@ function getFormattedDateTime() {
   let now = new Date();
 
   let day = now.getDate();
-  let month = now.toLocaleString("en-US", { month: "short" });
+  let month = now.toLocaleString("en-US", {month: "short"});
   let year = now.getFullYear();
 
-  let time = now.toLocaleTimeString("en-US", { hour12: true });
+  let time = now.toLocaleTimeString("en-US", {hour12: true});
 
   return `${day} ${month} ${year} At ${time}`;
 }
@@ -67,6 +97,9 @@ function addTask(inputTask, KanbanBoard) {
   editButton.addEventListener("click", () => {
     let updatedTask = prompt("Edit Task:", taskText.textContent);
     if (updatedTask) {
+      let editedTag = newToDoTask.querySelector("p").textContent;
+      localStorage.setItem(updatedTask, localStorage.getItem(editedTag));
+      localStorage.removeItem(editedTag);
       taskText.textContent = updatedTask;
     }
   });
@@ -77,6 +110,7 @@ function addTask(inputTask, KanbanBoard) {
   deleteButton.innerHTML = `<i class="fas fa-trash"></i>`;
   deleteButton.addEventListener("click", () => {
     newToDoTask.remove();
+    localStorage.removeItem(newToDoTask.querySelector("p").textContent);
     setNumberOfTasks();
   });
 
@@ -104,6 +138,7 @@ function addTask(inputTask, KanbanBoard) {
 
   // Append to Kanban board
   KanbanBoard.appendChild(newToDoTask);
+  localStorage.setItem(inputTask, KanbanBoard.id);
   setNumberOfTasks();
 }
 
@@ -135,7 +170,17 @@ allItems.forEach((item) => attachDragEvents(item));
 allBoards.forEach((board) => {
   board.addEventListener("dragover", () => {
     const flyingElement = document.querySelector(".flying");
+    if (flyingElement) {
+      const paraTags = flyingElement.querySelectorAll("p");
+      if (paraTags.length > 1) {
+        // Ensure there's more than one <p> tag
+        paraTags[paraTags.length - 1].innerText = getFormattedDateTime(); // Change last <p> text
+        let editedTag = paraTags[0].textContent;
+        localStorage.setItem(editedTag, board.id);
+      }
+    }
     board.appendChild(flyingElement);
+    console.log(flyingElement);
     setNumberOfTasks();
   });
 });

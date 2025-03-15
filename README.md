@@ -2,7 +2,7 @@
 
 🔗 **Live Demo:** [TaskFlow-Kanban](https://yashpandey1405.github.io/TaskFlow-Kanban/)
 
-TaskFlow-Kanban is a **lightweight and interactive Kanban board** for task management. It supports **drag-and-drop**, **task editing**, **deletion**, **dynamic task counts**, and **dark mode**.
+TaskFlow-Kanban is a **lightweight and interactive Kanban board** for task management. It supports **drag-and-drop**, **task editing**, **deletion**, **dynamic task counts**, **dark mode**, and **persistent task positions**.
 
 ## **Features**
 
@@ -10,7 +10,9 @@ TaskFlow-Kanban is a **lightweight and interactive Kanban board** for task manag
 ✔️ Task Editing & Deletion  
 ✔️ Auto-updating Task Count  
 ✔️ Dark Mode Toggle  
-✔️ Predefined Tasks on Load
+✔️ Predefined Tasks on Load  
+✔️ **Persistent Task Location using LocalStorage** 📝  
+✔️ **Dynamic Task Date Updates on Movement** 📅
 
 ## **Usage**
 
@@ -25,4 +27,4 @@ TaskFlow-Kanban is a **lightweight and interactive Kanban board** for task manag
 
 🛠️ HTML, CSS, JavaScript (ES6+)
 
-⚡ **Enjoy a seamless task management experience!**
+⚡ **Enjoy a seamless task management experience with automatic task persistence and timestamps!**
